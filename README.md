@@ -14,3 +14,5 @@
 pip install -r requirements.txt
 python stats.py
 ```
+
+This script prints out a bunch of stats that I pasted into [this table](https://docs.google.com/presentation/d/1FroIfyQMalOm9DtSLQhrEX_VeOkQ-uj8/edit#slide=id.g321010d0b65_0_111)
