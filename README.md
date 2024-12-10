@@ -6,6 +6,8 @@
 
 2. Members: export all chapter members from [here](https://community.citizensclimate.org/tools/chapter-roster)
 
+3. replace the file names used to `read_csv` in `stats.py` (I know this could be a config or command line arg but I am tired)
+
 ## Run
 
 ```
