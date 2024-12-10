@@ -43,6 +43,13 @@ if __name__=="__main__":
     )
     print("# of CCL Chicago Members (per District)")
     print(volunteers_per_district)
+
+    total_num_members = members_df.shape[0]
+    print("Total # of CCL Chicago Members: ", total_num_members)
+
+    # TODO gotta eliminate those with a district that is not IL01-IL09
+    # allowlist_il_districts = ['IL01', 'IL02', 'IL03', 'IL04', 'IL05', 'IL06', 'IL07', 'IL08', 'IL09']
+    # print("Total # of CCL Chicago Members with no District: ", total_num_members - volunteers_per_district['Total Volunteers'].sum())
     print("\n\n")
 
     # Group actions_df by 'district' and count unique volunteer_id
@@ -53,6 +60,10 @@ if __name__=="__main__":
     )
     print("# of Members w/ Activity (per District)")
     print(unique_volunteers_per_district)
+    
+    total_num_members_w_activity = len(pd.unique(actions_df['volunteer_id']))
+    print("Total # of Members w/ Activity: ", total_num_members_w_activity)
+    print("Total # of Members w/ Activity (but no district): ", total_num_members_w_activity - unique_volunteers_per_district['unique_volunteers'].sum())
     print("\n\n")
 
     # Group by district and count the number of actions
@@ -63,8 +74,6 @@ if __name__=="__main__":
     )
     print("# of Actions (per District)")
     print(actions_per_district)
-    print("\n\n")
-
-    print("Total # of CCL Chicago Members: ", members_df.shape[0])
-    print("Total # of Members w/ Activity: ", len(pd.unique(actions_df['volunteer_id'])))
     print("Total # of Actions: ", actions_df.shape[0])
+    print("Total # of Actions w/ no district: ", actions_df.shape[0] - actions_per_district['Total Actions'].sum())
+    print("\n\n")
