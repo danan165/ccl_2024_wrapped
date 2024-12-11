@@ -17,7 +17,7 @@ def clean_data(raw_members_df, raw_actions_df):
 
     # Filter out non-IL districts, and filter out actions from before Jan 1 2024
     members_df = members_df[members_df['district'].str.contains("IL", na=False)]
-    actions_df = actions_df[actions_df['district'].str.contains("IL", na=False)]
+    # actions_df = actions_df[actions_df['district'].str.contains("IL", na=False)]
     actions_df = actions_df[
         (actions_df['activity date'] >= datetime(2024, 1, 1))
     ]
@@ -26,15 +26,13 @@ def clean_data(raw_members_df, raw_actions_df):
     id_to_district = members_df.set_index('volunteer_id')['district']
     actions_df['district'] = actions_df['volunteer_id'].map(id_to_district)
 
+    actions_df = actions_df[actions_df['district'].notnull()]
+
     return members_df, actions_df
 
 
-if __name__=="__main__":
-    raw_members_df = pd.read_csv('data/chapter-roster.csv')
-    raw_actions_df = pd.read_csv('data/activity_download_2023-12-09-2024-12-24.csv')
-
-    members_df, actions_df = clean_data(raw_members_df, raw_actions_df)
-
+def chapter_activity_by_district(members_df, actions_df):
+    print("********CHAPTER ACTIVITY BY DISTRICT**********")
     # Group by district and count the number of volunteers
     volunteers_per_district = (
         members_df.groupby('district')
@@ -77,3 +75,28 @@ if __name__=="__main__":
     print("Total # of Actions: ", actions_df.shape[0])
     print("Total # of Actions w/ no district: ", actions_df.shape[0] - actions_per_district['Total Actions'].sum())
     print("\n\n")
+    print("**********************")
+
+
+def chapter_actions_by_district(members_df, actions_df):
+    print("*********CHAPTER ACTIONS BY DISTRICT*************")
+    unique_action_categories = actions_df['category'].unique()
+
+    for category in unique_action_categories:
+        actions = (
+            actions_df[actions_df['category'] == category].groupby('district')
+            .size()
+            .reset_index(name=f'Total Num {category} Actions per District')
+        )
+        print(actions)
+        print("TOTAL: ", actions[f'Total Num {category} Actions per District'].sum())
+
+
+if __name__=="__main__":
+    raw_members_df = pd.read_csv('data/chapter-roster.csv')
+    raw_actions_df = pd.read_csv('data/activity_download_2023-12-09-2024-12-24.csv')
+
+    members_df, actions_df = clean_data(raw_members_df, raw_actions_df)
+
+    chapter_activity_by_district(members_df, actions_df)
+    chapter_actions_by_district(members_df, actions_df)
