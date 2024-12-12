@@ -26,6 +26,7 @@ def clean_data(raw_members_df, raw_actions_df):
     id_to_district = members_df.set_index('volunteer_id')['district']
     actions_df['district'] = actions_df['volunteer_id'].map(id_to_district)
 
+    # remove actions from volunteers with a non-existent district
     actions_df = actions_df[actions_df['district'].notnull()]
 
     return members_df, actions_df
@@ -44,11 +45,6 @@ def chapter_activity_by_district(members_df, actions_df):
 
     total_num_members = members_df.shape[0]
     print("Total # of CCL Chicago Members: ", total_num_members)
-
-    # TODO gotta eliminate those with a district that is not IL01-IL09
-    # allowlist_il_districts = ['IL01', 'IL02', 'IL03', 'IL04', 'IL05', 'IL06', 'IL07', 'IL08', 'IL09']
-    # print("Total # of CCL Chicago Members with no District: ", total_num_members - volunteers_per_district['Total Volunteers'].sum())
-    print("\n\n")
 
     # Group actions_df by 'district' and count unique volunteer_id
     unique_volunteers_per_district = (
